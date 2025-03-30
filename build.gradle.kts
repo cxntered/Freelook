@@ -16,6 +16,7 @@ val mcVersion: String by project
 val version: String by project
 val mixinGroup = "$baseGroup.mixin"
 val modid: String by project
+val modName: String by project
 val transformerFile = file("src/main/resources/accesstransformer.cfg")
 
 // Toolchains:
@@ -28,9 +29,9 @@ loom {
     log4jConfigs.from(file("log4j2.xml"))
     launchConfigs {
         "client" {
-            // If you don't want mixins, remove these lines
             property("mixin.debug", "true")
-            arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+            arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
+            arg("--mixin", "mixins.$modid.json")
         }
     }
     runConfigs {
@@ -44,14 +45,12 @@ loom {
     }
     forge {
         pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
-        // If you don't want mixins, remove this lines
         mixinConfig("mixins.$modid.json")
 	    if (transformerFile.exists()) {
 			println("Installing access transformer")
 		    accessTransformer(transformerFile)
 	    }
     }
-    // If you don't want mixins, remove these lines
     mixin {
         defaultRefmapName.set("mixins.$modid.refmap.json")
     }
@@ -72,8 +71,8 @@ sourceSets.main {
 repositories {
     mavenCentral()
     maven("https://repo.spongepowered.org/maven/")
-    // If you don't want to log in with your real minecraft account, remove this line
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+    maven("https://repo.essential.gg/repository/maven-public")
 }
 
 val shadowImpl: Configuration by configurations.creating {
@@ -87,15 +86,16 @@ dependencies {
 
     shadowImpl(kotlin("stdlib-jdk8"))
 
-    // If you don't want mixins, remove these lines
     shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         isTransitive = false
     }
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
 
-    // If you don't want to log in with your real minecraft account, remove this line
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
 
+    modImplementation("gg.essential:vigilance-1.8.9-forge:299")
+    shadowImpl("gg.essential:loader-launchwrapper:1.2.3")
+    modCompileOnly("gg.essential:essential-1.8.9-forge:17141+gd6f4cfd3a8")
 }
 
 // Tasks:
@@ -105,13 +105,12 @@ tasks.withType(JavaCompile::class) {
 }
 
 tasks.withType(org.gradle.jvm.tasks.Jar::class) {
-    archiveBaseName.set(modid)
+    archiveBaseName.set(modName)
     manifest.attributes.run {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
 
-        // If you don't want mixins, remove these lines
-        this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
+        this["TweakClass"] = "gg.essential.loader.stage0.EssentialSetupTweaker"
         this["MixinConfigs"] = "mixins.$modid.json"
 	    if (transformerFile.exists())
 			this["FMLAT"] = "${modid}_at.cfg"

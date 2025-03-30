@@ -1,4 +1,4 @@
-package com.github.cxntered.freelook.init;
+package dev.cxntered.freelook.init;
 
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
