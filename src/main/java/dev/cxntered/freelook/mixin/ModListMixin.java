@@ -1,5 +1,6 @@
 package dev.cxntered.freelook.mixin;
 
+import dev.cxntered.freelook.Freelook;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
@@ -18,8 +19,11 @@ public abstract class ModListMixin {
     private Map<String, String> modTags;
 
     @Inject(method = "<init>(Ljava/util/List;)V", at = @At("RETURN"))
-    private void removeMod(List<ModContainer> modList, CallbackInfo ci) {
+    private void spoofModTag(List<ModContainer> modList, CallbackInfo ci) {
         if (Minecraft.getMinecraft().isIntegratedServerRunning()) return;
-        modTags.remove("freelook");
+        if (Freelook.INSTANCE.isHypixel() || Freelook.INSTANCE.getConfig().getSnaplook()) {
+            modTags.remove(Freelook.MOD_ID);
+            modTags.put(Freelook.ALT_MOD_ID, Freelook.VERSION);
+        }
     }
 }

@@ -5,7 +5,7 @@ import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import java.io.File
 
-object Config : Vigilant(File("./config/freelook.toml")) {
+object Config : Vigilant(File("./config/freelook.toml"), "Freelook Settings") {
     @Property(
         type = PropertyType.SWITCH,
         name = "Enabled",
@@ -15,9 +15,17 @@ object Config : Vigilant(File("./config/freelook.toml")) {
     var enabled = true
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Snaplook",
+        description = "Whether or not Snaplook is enabled. When enabled, the camera will behave like normal F5. Snaplook is forcefully enabled when on Hypixel.",
+        category = "General"
+    )
+    var snaplook = false
+
+    @Property(
         type = PropertyType.SELECTOR,
         name = "Mode",
-        description = "The mode of enabling freelook.",
+        description = "The mode of enabling Freelook.",
         options = ["Hold", "Toggle"],
         category = "General"
     )
@@ -50,7 +58,7 @@ object Config : Vigilant(File("./config/freelook.toml")) {
     @Property(
         type = PropertyType.SWITCH,
         name = "Lock Pitch",
-        description = "Whether or not pitch is locked. When disabled, the camera can go upside down.",
+        description = "Whether or not pitch is locked. When disabled, the camera can go upside down. This setting is forcefully enabled if Snaplook is enabled.",
         category = "General"
     )
     var lockPitch = true
@@ -71,19 +79,14 @@ object Config : Vigilant(File("./config/freelook.toml")) {
         min = 10,
         max = 150,
     )
-    var fov = 110
+    var fov = 70
 
     init {
         initialize()
 
-        addDependency("mode", "enabled")
-        addDependency("yaw", "enabled")
-        addDependency("pitch", "enabled")
-        addDependency("invertPitch", "enabled")
-        addDependency("lockPitch", "enabled")
-        addDependency("customFov", "enabled")
-        addDependency("fov", "enabled")
-
-        addDependency("fov", "customFov")
+        listOf(
+            "snaplook", "mode", "yaw", "pitch",
+            "invertPitch", "lockPitch", "customFov", "fov"
+        ).forEach { addDependency(it, "enabled") }
     }
 }

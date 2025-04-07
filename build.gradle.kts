@@ -3,19 +3,19 @@ import org.apache.commons.lang3.SystemUtils
 plugins {
     idea
     java
-    id("gg.essential.loom") version "0.10.0.+"
+    id("gg.essential.loom") version "0.10.0.5"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     kotlin("jvm") version "2.0.0"
 }
 
-//Constants:
+// Constants:
 
 val baseGroup: String by project
 val mcVersion: String by project
 val version: String by project
 val mixinGroup = "$baseGroup.mixin"
-val modid: String by project
+val modId: String by project
 val modName: String by project
 val transformerFile = file("src/main/resources/accesstransformer.cfg")
 
@@ -31,7 +31,7 @@ loom {
         "client" {
             property("mixin.debug", "true")
             arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
-            arg("--mixin", "mixins.$modid.json")
+            arg("--mixin", "mixins.$modId.json")
         }
     }
     runConfigs {
@@ -45,14 +45,14 @@ loom {
     }
     forge {
         pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
-        mixinConfig("mixins.$modid.json")
+        mixinConfig("mixins.$modId.json")
 	    if (transformerFile.exists()) {
 			println("Installing access transformer")
 		    accessTransformer(transformerFile)
 	    }
     }
     mixin {
-        defaultRefmapName.set("mixins.$modid.refmap.json")
+        defaultRefmapName.set("mixins.$modId.refmap.json")
     }
 }
 
@@ -111,23 +111,23 @@ tasks.withType(org.gradle.jvm.tasks.Jar::class) {
         this["ForceLoadAsMod"] = "true"
 
         this["TweakClass"] = "gg.essential.loader.stage0.EssentialSetupTweaker"
-        this["MixinConfigs"] = "mixins.$modid.json"
+        this["MixinConfigs"] = "mixins.$modId.json"
 	    if (transformerFile.exists())
-			this["FMLAT"] = "${modid}_at.cfg"
+			this["FMLAT"] = "${modId}_at.cfg"
     }
 }
 
 tasks.processResources {
     inputs.property("version", project.version)
     inputs.property("mcversion", mcVersion)
-    inputs.property("modid", modid)
+    inputs.property("modId", modId)
     inputs.property("basePackage", baseGroup)
 
-    filesMatching(listOf("mcmod.info", "mixins.$modid.json")) {
+    filesMatching(listOf("mcmod.info", "mixins.$modId.json")) {
         expand(inputs.properties)
     }
 
-    rename("accesstransformer.cfg", "META-INF/${modid}_at.cfg")
+    rename("accesstransformer.cfg", "META-INF/${modId}_at.cfg")
 }
 
 

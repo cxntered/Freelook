@@ -31,7 +31,7 @@ public abstract class EntityRendererMixin {
     }
 
     @Redirect(method = "updateCameraAndRender", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;inGameHasFocus:Z"))
-    private boolean modifyMouse(Minecraft minecraft) {
+    private boolean overrideMouse(Minecraft minecraft) {
         return Freelook.INSTANCE.overrideMouse();
     }
 }

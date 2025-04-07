@@ -1,6 +1,6 @@
 [
   {
-    "modid": "${modid}",
+    "modid": "${modId}",
     "name": "Freelook",
     "description": "Freely look around without moving your head.",
     "version": "${version}",
