@@ -21,10 +21,9 @@ import kotlin.math.pow
 object Freelook {
     const val MOD_ID = "freelook"
     const val ALT_MOD_ID = "snaplook"
-    const val VERSION = "1.1.0"
+    const val VERSION = "1.1.1"
 
     private lateinit var mc: Minecraft
-    val config: Config = Config
     private val keybind = KeyBinding("Freelook", Keyboard.KEY_LMENU, "Freelook")
 
     var freelookToggled = false
@@ -39,8 +38,8 @@ object Freelook {
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
         mc = Minecraft.getMinecraft()
-        config.preload()
-        lastFov = config.fov
+        Config.preload()
+        lastFov = Config.fov
 
         MinecraftForge.EVENT_BUS.register(this)
         EssentialAPI.getCommandRegistry().registerCommand(FreelookCommand)
@@ -58,7 +57,7 @@ object Freelook {
 
     @SubscribeEvent
     fun onGuiOpen(event: GuiOpenEvent) {
-        if (event.gui != null && freelookToggled && config.mode == 0) {
+        if (event.gui != null && freelookToggled && Config.mode == 0) {
             resetPerspective()
         }
     }
@@ -77,7 +76,7 @@ object Freelook {
     }
 
     private fun onPressed(state: Boolean) {
-        if (config.enabled) {
+        if (Config.enabled) {
             if (state) {
                 cameraYaw = mc.thePlayer.rotationYaw
                 cameraPitch = mc.thePlayer.rotationPitch
@@ -87,7 +86,7 @@ object Freelook {
                     enterFreelook()
                 }
                 mc.renderGlobal.setDisplayListEntitiesDirty()
-            } else if (config.mode == 0) {
+            } else if (Config.mode == 0) {
                 resetPerspective()
             }
         } else if (freelookToggled) {
@@ -100,14 +99,14 @@ object Freelook {
         previousPerspective = mc.gameSettings.thirdPersonView
         mc.gameSettings.thirdPersonView = 1
         lastFov = mc.gameSettings.fovSetting.toInt()
-        if (config.customFov) mc.gameSettings.fovSetting = config.fov.toFloat()
+        if (Config.customFov) mc.gameSettings.fovSetting = Config.fov.toFloat()
     }
 
     private fun resetPerspective() {
         freelookToggled = false
         mc.gameSettings.thirdPersonView = previousPerspective
         mc.renderGlobal.setDisplayListEntitiesDirty()
-        if (config.mode == 0 || config.customFov) {
+        if (Config.mode == 0 || Config.customFov) {
             mc.gameSettings.fovSetting = lastFov.toFloat()
         }
     }
@@ -121,14 +120,14 @@ object Freelook {
             val sensitivity = (mc.gameSettings.mouseSensitivity * 0.6f + 0.2f).pow(3) * 8.0f * 0.15f
             val yaw = mc.mouseHelper.deltaX.toFloat() * sensitivity
             var pitch = mc.mouseHelper.deltaY.toFloat() * sensitivity
-            val snaplook = isHypixel() || config.snaplook
+            val snaplook = isHypixel() || Config.snaplook
 
-            if (config.yaw) cameraYaw += yaw
+            if (Config.yaw) cameraYaw += yaw
 
-            if (config.pitch) {
-                if (config.invertPitch) pitch = -pitch
+            if (Config.pitch) {
+                if (Config.invertPitch) pitch = -pitch
                 cameraPitch += pitch
-                if (config.lockPitch || snaplook) cameraPitch = cameraPitch.coerceIn(-90f, 90f)
+                if (Config.lockPitch || snaplook) cameraPitch = cameraPitch.coerceIn(-90f, 90f)
             }
 
             if (snaplook) {

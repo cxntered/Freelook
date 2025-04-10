@@ -11,15 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
-    @Unique
-    public final Config freelook$config = Freelook.INSTANCE.getConfig();
-
     @Inject(method = "runTick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;thirdPersonView:I"))
     private void thirdPerson(CallbackInfo ci) {
         if (Freelook.INSTANCE.getFreelookToggled()) {
             Minecraft mc = Minecraft.getMinecraft();
-            boolean freelookHold = freelook$config.getMode() == 0;
-            boolean freelookCustomFov = freelook$config.getCustomFov();
+            boolean freelookHold = Config.INSTANCE.getMode() == 0;
+            boolean freelookCustomFov = Config.INSTANCE.getCustomFov();
             float lastFov = Freelook.INSTANCE.getLastFov().floatValue();
 
             Freelook.INSTANCE.setFreelookToggled(false);

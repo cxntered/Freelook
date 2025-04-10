@@ -5,7 +5,7 @@ import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import java.io.File
 
-object Config : Vigilant(File("./config/freelook.toml"), "Freelook Settings") {
+object Config : Vigilant(File("./config/freelook.toml")) {
     @Property(
         type = PropertyType.SWITCH,
         name = "Enabled",
