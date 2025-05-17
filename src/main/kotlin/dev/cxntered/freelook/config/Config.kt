@@ -1,11 +1,12 @@
 package dev.cxntered.freelook.config
 
+import dev.cxntered.freelook.Freelook
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import java.io.File
 
-object Config : Vigilant(File("./config/freelook.toml")) {
+object Config : Vigilant(File("./config/${Freelook.MOD_ID}.toml")) {
     @Property(
         type = PropertyType.SWITCH,
         name = "Enabled",

@@ -6,6 +6,7 @@ plugins {
     id("gg.essential.loom") version "0.10.0.+"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("net.kyori.blossom") version "1.3.2"
     kotlin("jvm") version "2.0.0"
 }
 
@@ -16,8 +17,16 @@ val mcVersion: String by project
 val version: String by project
 val mixinGroup = "$baseGroup.mixin"
 val modId: String by project
+val modAltId: String by project
 val modName: String by project
 val transformerFile = file("src/main/resources/accesstransformer.cfg")
+
+blossom {
+    replaceToken("@NAME@", modName)
+    replaceToken("@ID@", modId)
+    replaceToken("@ALT_ID@", modAltId)
+    replaceToken("@VERSION@", version)
+}
 
 // Toolchains:
 java {

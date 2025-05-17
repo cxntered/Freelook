@@ -19,12 +19,13 @@ import kotlin.math.pow
 
 @Mod(modid = Freelook.MOD_ID, useMetadata = true, modLanguageAdapter = "gg.essential.api.utils.KotlinAdapter")
 object Freelook {
-    const val MOD_ID = "freelook"
-    const val ALT_MOD_ID = "snaplook"
-    const val VERSION = "1.1.1"
+    const val NAME = "@NAME@"
+    const val MOD_ID = "@ID@"
+    const val ALT_MOD_ID = "@ALT_ID@"
+    const val VERSION = "@VERSION@"
 
     private lateinit var mc: Minecraft
-    private val keybind = KeyBinding("Freelook", Keyboard.KEY_LMENU, "Freelook")
+    private val keybind = KeyBinding("Freelook", Keyboard.KEY_LMENU, NAME)
 
     var freelookToggled = false
     private var previousState = false

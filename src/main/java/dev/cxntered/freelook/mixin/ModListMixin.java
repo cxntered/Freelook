@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(value = FMLHandshakeMessage.ModList.class)
+@Mixin(value = FMLHandshakeMessage.ModList.class, remap = false)
 public abstract class ModListMixin {
     @Shadow
     private Map<String, String> modTags;
